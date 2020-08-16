@@ -1,4 +1,5 @@
 const apiUrl = "https://api.lyrics.ovh/";
+let extraInfo = {};
 
 //Input field and search buttons
 const songInput = document.getElementById("songInput");
@@ -7,6 +8,19 @@ const fancyResult = document.getElementById("fancy-result");
 const singleLyrics = document.getElementById("single-lyrics");
 const lyricsContainer = document.getElementById("lyrics");
 const lyricsTitle = document.querySelector("#single-lyrics h2");
+
+//SearchButton functionality
+searchButton.addEventListener("click", function () {
+  if (songInput.value) {
+    fancyResult.innerHTML = "";
+    fetchMusic(songInput.value);
+    toggleElement(singleLyrics, fancyResult);
+    extraInfo.songInput = songInput.value;
+    songInput.value = "";
+  } else {
+    alert("Please enter a song name.");
+  }
+});
 
 //Load data by song title
 async function loadSongByTitle(title) {
@@ -25,9 +39,14 @@ function fetchMusic(title) {
       const albumName = music.album.title;
       const artistName = music.artist.name;
       const title = music.title;
+      extraInfo.cover = music.album.cover;
+      extraInfo.songLink = music.link;
 
       fancyResult.innerHTML += `<div class="single-result row align-items-center my-3 p-3">
-                                <div class="col-md-9">
+                                <div class="col-md-3">
+                                    <img src = '${extraInfo.cover}' alt='cover' >
+                                </div>
+                                <div class="col-md-6">
                                     <h3 class="lyrics-name">${title}</h3>
                                     <p class="author lead">Album by <span>${artistName}</span></p>
                                 </div>
@@ -49,27 +68,26 @@ async function loadLyrics(artistName, title) {
   return data;
 }
 
-//SearchButton functionality
-searchButton.addEventListener("click", function () {
-  fancyResult.innerHTML = "";
-  fetchMusic(songInput.value);
-  toggleElement(singleLyrics, fancyResult);
-});
-
-//getLyrics by trackId
+//getLyrics by artistName and title
 function getLyrics(artistName, title) {
   toggleElement(fancyResult, singleLyrics);
   const lyrics = loadLyrics(artistName, title);
+  const hearSongButton = document.getElementById("hear-song");
+  let albumCover = document.getElementById("albumCover");
+
   lyrics.then((lyric) => {
     if (lyric.lyrics) {
       lyricsContainer.innerHTML = lyric.lyrics;
+      albumCover.src = extraInfo.cover;
+      hearSongButton.href = extraInfo.songLink;
     } else {
       lyricsContainer.innerHTML = "Sorry! Lyrics not available.";
+      albumCover.src = "";
     }
     const goToButton = document.querySelector(".btn.go-back");
     goToButton.onclick = function () {
       fancyResult.innerHTML = "";
-      fetchMusic(songInput.value);
+      fetchMusic(extraInfo.songInput);
       toggleElement(singleLyrics, fancyResult);
     };
 
@@ -77,7 +95,7 @@ function getLyrics(artistName, title) {
   });
 }
 
-//remove search result
+//change Element display state
 function toggleElement(hideElement, displayElement) {
   hideElement.style.display = "none";
   displayElement.style.display = "block";

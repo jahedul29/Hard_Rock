@@ -47,17 +47,21 @@ body {
     height: 100%;
 }
 
+
+/* Result section */
+#fancy-result {
+    display: none;
+}
+
 .single-result {
     background: rgba(88, 143, 37, 0.404);
     border-radius: 15px;
     transition: all 5s;
 }
 
-.single-lyrics {
-    display: none;
-}
 
-.fancy-result {
+/* Lyrics section */
+.single-lyrics {
     display: none;
 }
 
@@ -68,4 +72,37 @@ body {
     border-radius: 30px;
     padding: 2px 30px !important;
     margin-bottom: 2%;
+}
+
+#lyrics {
+    font-size: 20px;
+    font-style: italic;
+}
+
+#hear-song {
+    position: fixed;
+    top: 80%;
+    left: 80%;
+    border-radius: 15px;
+}
+
+
+/* Footer Section */
+footer {
+    background: rgb(61, 147, 168);
+    color: white;
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    top: 92%;
+    bottom: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+footer span {
+    color: black;
+    font-size: 20px;
+    font-weight: 600;
 }
